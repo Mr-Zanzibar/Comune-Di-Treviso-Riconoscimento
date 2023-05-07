@@ -5,9 +5,9 @@ Pagina GitHub per la documentazione del comune di treviso
 
 ## Comune
 
-- il giorno 01/05/2023 il comune di treviso (IT) ha deciso di migliorare la sicurezza
+- il giorno 01/05/2023 il comune di treviso (IT) ha deciso di migliorare la sicurezza del proprio edificio
 
-- il direttore del comune ha dato quindi la possibilità ai giovano italiani di creare un codice che attraverso esso riesce a verificare la data di scadenza del tesserino
+- il direttore del comune ha dato quindi la possibilità ai giovano italiani di creare un codice (ovviamente pagato) che attraverso esso riesce a verificare la data di scadenza del tesserino
 
 - e la firma del proprietrario con suddetto codice fiscale.
 
