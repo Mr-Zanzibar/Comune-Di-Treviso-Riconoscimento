@@ -1,6 +1,8 @@
 # Comune-Di-Treviso-Riconoscimento
 Pagina GitHub per la documentazione del comune di treviso
 
+- no, non sono di treviso
+
 ## Comune
 
 - il giorno 01/05/2023 il comune di treviso (IT) ha deciso di migliorare la sicurezza
