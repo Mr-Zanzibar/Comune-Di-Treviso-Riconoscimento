@@ -13,7 +13,7 @@ int main()
         int current_month = now->tm_mon + 1;
         int current_day = now->tm_mday;
 
-        // Imposta la data di scadenza del documento, ogni tesserino di riconoscimento per la sede del comune di treviso scade il 31/12/2025
+        // Imposta la data di scadenza del documento, ogni tesserino di riconoscimento per la sede del comune di Treviso scade il 31/12/2025
         int expiry_year = 2025;
         int expiry_month = 12;
         int expiry_day = 31;
@@ -40,18 +40,12 @@ int main()
         const char* signature_data = "Q2FsdGVkX1+5y5iDpiJbKPZ9X9U0/LJ6UQX6q3c6jKysfZPllRmGChmBJlKyTGGv\nnVpTeu+TJgXaF+/iICUE8V7TrnISl4/qV05UHk6ya8ki6UZOin6xtqX6ZtbBvZ8W\nwRwRpe1BpJQUzvId8oFkAHoyVyIfDYuw9xd5cZ/LmWlP2Cm3q+dEGM2oAJjjmqYz\nPHhFCgO9rclxxZ+1SWZ+zSYE0G98xYZgcy+HlLYt7Yg1vjBlrJhXfZ+xy/E1pWZO\nnLxh/wfcyJYSv8D5+tyfRJjdGE9E5mp5cMTC5rmJ2Lh5x5q1JvK8UzmsXCQ6BqU6\nLmJZEMBBscWcwwRfR1p18uToUKz8N7VcF36I9S47Xng=";
         const char* public_key_data = "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArcs7Ua3/tkCQ2ALiMvU8\nBRp23LRbRdpfKZuHvU8WSEp5B1fRd9Nyblzohqq8Bjw15qktOefDQl5OZj5W5t/9\nr9cm";
 
-        BIO* bio = BIO_new_mem_buf((void*)public_key_data, -1);
-        EVP_PKEY* pubkey = PEM_read_bio
-        time_t now = time(nullptr);
-        struct tm* timeinfo = localtime(&now);
-        char date_str[11];
-        strftime(date_str, sizeof(date_str), "%d/%m/%Y", timeinfo);
+        BIO* pubkey_bio = BIO_new_mem_buf((void*)public_key_data, -1);
+        EVP_PKEY* pubkey = PEM_read_bio_PUBKEY(pubkey_bio, nullptr, nullptr, nullptr);
 
-        // Verifica se il documento è scaduto
-        if (expiry_date < date_str) {
-            std::cout << "Il documento è scaduto." << std::endl;
-        } else {
-            std::cout << "Il documento è valido." << std::endl;
+        if (!pubkey) {
+            std::cerr << "Errore durante la lettura della chiave pubblica." << std::endl;
+            return 1;
         }
 
         // Verifica l'autenticità della firma digitale
@@ -66,12 +60,13 @@ int main()
             return 1;
         }
 
-        if (EVP_VerifyUpdate(md_ctx, doc_data, doc_len) != 1) {
+        if (EVP_VerifyUpdate(md_ctx, (const unsigned char*)signature_data, std::strlen(signature_data)) != 1) {
             std::cerr << "Errore durante l'aggiornamento dell'hash con i dati del documento." << std::endl;
             return 1;
         }
 
-        if (EVP_VerifyFinal(md_ctx, signature_data, signature_len, pubkey) != 1) {
+        int verify_result = EVP_VerifyFinal(md_ctx, (const unsigned char*)signature_data, std::strlen(signature_data), pubkey);
+        if (verify_result != 1) {
             std::cerr << "La firma digitale del documento non è autentica." << std::endl;
             return 1;
         }
@@ -84,7 +79,7 @@ int main()
         EVP_MD_CTX_free(md_ctx);
 
         // Attendi un giorno prima di verificare il documento successivo
-        sleep(86400);
+        std::this_thread::sleep_for(std::chrono::seconds(86400));
     }
 
     return 0;
