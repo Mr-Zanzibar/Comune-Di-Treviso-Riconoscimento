@@ -20,3 +20,9 @@ Pagina GitHub per la documentazione del comune di treviso
 ## Server
 
 - la versione server (o aggiurnamenti futuri) saranno implementati solo ed esclusivamente sotto richiesta da parte del personale.
+
+## Aggiornamenti
+
+- 1.0.1 = libreria <thread> aggiunta correttamente & corretta la funzione -PEM_read_bio- con -PEM_read_bio_PUBKEY-
+  
+ - questi saranno gli ultimi aggiornamenti per un po di tempo dato che ora il codice funziona perfettamente al 100%
